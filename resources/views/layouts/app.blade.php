@@ -1,333 +1,122 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
-    {{-- <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet"> --}}
-    <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js"
-        integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous">
-    </script>
-
-    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
-
-<body data-layout="horizontal" data-topbar="dark">
-    <div id="app">
-        <div id="layout-wrapper">
-
-            <!-- ========== Left Sidebar Start ========== -->
-
-            <!-- Left Sidebar End -->
-            <header id="page-topbar" class="ishorizontal-topbar">
-                <div class="navbar-header">
-                    <div class="d-flex">
-                        <!-- LOGO -->
-                        <div class="navbar-brand-box">
-
-
-                            <a href="index.html" class="logo logo-light">
-                                <span class="logo-sm">
-                                    <img src="../images/logo.png" alt="" height="22">
-                                </span>
-                                <span class="logo-lg">
-                                    <img src="../images/logo.png" alt="" height="22">
-                                    <span class="logo-txt">{{ config('app.name', 'Laravel') }}
-                                    </span>
-                                </span>
-                            </a>
-                        </div>
-                        <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item"
-                            data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
-                            <i class="fas fa-fw fa-bars"></i>
-                        </button>
-
-
-
-                        {{-- menu principal --}}
-                        <div class="topnav">
-                            <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
-
-                                <div class="collapse navbar-collapse" id="topnav-menu-content">
-                                    <ul class="navbar-nav">
-                                        {{-- dashboard --}}
-                                        <li class="nav-item">
-                                            <a class="nav-link dropdown-toggle arrow-none" href="{{ url('/home') }}"
-                                                id="topnav-dashboard" role="button" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-tachometer-alt"></i>
-                                                <span data-key="t-dashboards">Dashboard</span>
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle arrow-none {{ request()->is('usuarios*') ? 'active' : '' }}"
-                                                href="#" id="topnav-pages" role="button">
-                                                <i class="fas fa-users"></i>
-                                                <span data-key="t-apps">Usuarios</span>
-                                                <div class="arrow-down"></div>
-                                            </a>
-                                            <div class="dropdown-menu" aria-labelledby="topnav-pages">
-                                                <div class="dropdown">
-                                                    <a href="{{ url('/usuarios/listar') }}" class="dropdown-item"
-                                                        data-key="t-read-email">Listar</a>
-                                                    <a href="{{ url('/usuarios/create') }}" class="dropdown-item"
-                                                        data-key="t-read-email">Crear</a>
-
-                                                </div>
-
-
-
-                                            </div>
-                                        </li>
-                                        {{-- <apps></apps> --}}
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle arrow-none" href="#"
-                                                id="topnav-pages" role="button">
-
-                                                <span data-key="t-apps">menu1</span>
-                                                <div class="arrow-down"></div>
-                                            </a>
-                                            <div class="dropdown-menu" aria-labelledby="topnav-pages">
-
-
-
-                                                <div class="dropdown">
-                                                    <a class="dropdown-item dropdown-toggle arrow-none" href="#"
-                                                        id="topnav-email" role="button">
-                                                        <span data-key="t-email">submenu1</span>
-                                                        <div class="arrow-down"></div>
-                                                    </a>
-                                                    <div class="dropdown-menu" aria-labelledby="topnav-email">
-                                                        <a href="email-inbox.html" class="dropdown-item"
-                                                            data-key="t-inbox">item1</a>
-                                                        <a href="email-read.html" class="dropdown-item"
-                                                            data-key="t-read-email">item2</a>
-                                                    </div>
-                                                </div>
-
-
-
-                                            </div>
-                                        </li>
-                                        {{-- bootstrap --}}
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle arrow-none" href="#"
-                                                id="topnav-uielement" role="button" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-
-                                                <span data-key="t-bootstrap">Menu2</span>
-                                                <div class="arrow-down"></div>
-                                            </a>
-
-
-                                        </li>
-                                        {{-- components --}}
-
-                                        {{-- pages --}}
-
-
-                                    </ul>
-                                </div>
-                            </nav>
-                        </div>
+<body class="bg-gray-100">
+    <div x-data="{ sidebarOpen: false, sidebarCollapsed: false }" class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside :class="{'translate-x-0 ease-out': sidebarOpen, '-translate-x-full ease-in': !sidebarOpen, 'w-64': !sidebarCollapsed, 'w-20': sidebarCollapsed}" class="bg-gray-800 text-white fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform lg:translate-x-0 lg:relative lg:inset-0">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center" :class="{'justify-center': sidebarCollapsed}">
+                    <img class="h-8 w-auto" src="/images/logo.png" alt="{{ config('app.name', 'Laravel') }}">
+                    <span x-show="!sidebarCollapsed" class="ml-2 text-xl font-semibold">{{ config('app.name', 'Laravel') }}</span>
+                </div>
+                <button @click="sidebarCollapsed = !sidebarCollapsed" class="hidden lg:block p-1 rounded-md hover:bg-gray-700">
+                    <i :class="sidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'" class="fas"></i>
+                </button>
+            </div>
+            
+            <nav class="mt-5 px-2">
+                <a href="{{ url('/home') }}" class="group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-white hover:bg-gray-700 transition ease-in-out duration-150">
+                    <i class="fas fa-tachometer-alt mr-4"></i>
+                    <span x-show="!sidebarCollapsed">Dashboard</span>
+                </a>
+                <div x-data="{ open: false }">
+                    <button @click="open = !open" class="mt-1 group w-full flex items-center px-2 py-2 text-base leading-6 font-medium rounded-md text-white hover:bg-gray-700 transition ease-in-out duration-150">
+                        <i class="fas fa-users mr-4"></i>
+                        <span x-show="!sidebarCollapsed">Usuarios</span>
+                        <i x-show="!sidebarCollapsed" :class="{'fa-chevron-down': !open, 'fa-chevron-up': open}" class="fas ml-auto"></i>
+                    </button>
+                    <div x-show="open" class="mt-2 space-y-1">
+                        <a href="{{ url('/usuarios/listar') }}" class="group flex items-center pl-11 pr-2 py-2 text-sm leading-5 font-medium text-white rounded-md hover:bg-gray-700 transition ease-in-out duration-150">
+                            Listar
+                        </a>
+                        <a href="{{ url('/usuarios/create') }}" class="group flex items-center pl-11 pr-2 py-2 text-sm leading-5 font-medium text-white rounded-md hover:bg-gray-700 transition ease-in-out duration-150">
+                            Crear
+                        </a>
                     </div>
-                    {{-- barra buscar --}}
-                    <div class="d-flex">
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="btn header-item" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-binoculars   fa-fw"></i>
+                </div>
+                <!-- Agrega más elementos del menú aquí -->
+            </nav>
+        </aside>
 
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top bar -->
+            <header class="bg-white shadow-md">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center py-4">
+                        <div class="flex items-center">
+                            <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none focus:text-gray-600 lg:hidden">
+                                <i class="fas fa-bars"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0">
-
-                                <form class="p-3">
-                                    <div class="search-box">
-                                        <div class="position-relative">
-                                            <input type="search" name="search" id="search" class="form-control"
-                                                placeholder="Buscar aqui...">
-
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
                         </div>
-                        {{-- idiomas y banderas --}}
-                        <div class="dropdown d-inline-block language-switch">
-                            <button type="button" class="btn header-item" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <img class="header-lang-img" src="/images/flags/spain.jpg" alt="Header Language"
-                                    height="16">
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end">
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item language"
-                                    data-lang="eng">
-                                    <img src="/images/flags/us.jpg" alt="user-image" class="me-1" height="12">
-                                    <span class="align-middle">English</span>
-                                </a>
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item language"
-                                    data-lang="sp">
-                                    <img src="/images/flags/spain.jpg" alt="user-image" class="me-1"
-                                        height="12">
-                                    <span class="align-middle">Spanish</span>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item language"
-                                    data-lang="gr">
-                                    <img src="/images/flags/germany.jpg" alt="user-image" class="me-1"
-                                        height="12"> <span class="align-middle">German</span>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item language"
-                                    data-lang="it">
-                                    <img src="/images/flags/italy.jpg" alt="user-image" class="me-1"
-                                        height="12">
-                                    <span class="align-middle">Italian</span>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item language"
-                                    data-lang="ru">
-                                    <img src="/images/flags/russia.jpg" alt="user-image" class="me-1"
-                                        height="12"> <span class="align-middle">Russian</span>
-                                </a>
-                            </div>
-                        </div>
-                        {{-- campana de mensajes --}}
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="btn header-item noti-icon"
-                                id="page-header-notifications-dropdown" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell  fa-fw"></i>
-                                {{-- conteo de mensaje  --}}
-                                <span class="noti-dot bg-danger rounded-pill">2</span>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                                aria-labelledby="page-header-notifications-dropdown">
-                                <div class="p-3">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <h5 class="m-0 font-size-15"> Notificaciones </h5>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="" class="small"> Marcar todo como leido</a>
-                                        </div>
+                        <div class="flex items-center">
+                            <!-- Notificaciones -->
+                            <div x-data="{ notificationsOpen: false }" class="relative mr-4">
+                                <button @click="notificationsOpen = !notificationsOpen" class="text-gray-500 hover:text-gray-600">
+                                    <i class="fas fa-bell"></i>
+                                    <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">2</span>
+                                </button>
+                                <div x-show="notificationsOpen" @click.away="notificationsOpen = false" x-cloak class="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg overflow-hidden z-10">
+                                    <!-- Contenido de notificaciones -->
+                                    <div class="py-2">
+                                        <a href="#" class="flex items-center px-4 py-3 border-b hover:bg-gray-100 -mx-2">
+                                            <p class="text-gray-600 text-sm mx-2">
+                                                <span class="font-bold">Jane Doe</span> comentó en tu post.
+                                            </p>
+                                        </a>
+                                        <a href="#" class="flex items-center px-4 py-3 hover:bg-gray-100 -mx-2">
+                                            <p class="text-gray-600 text-sm mx-2">
+                                                <span class="font-bold">John Doe</span> te envió un mensaje.
+                                            </p>
+                                        </a>
                                     </div>
+                                    <a href="#" class="block bg-gray-800 text-white text-center font-bold py-2">Ver todas las notificaciones</a>
                                 </div>
-
-                                <div class="p-2 border-top d-grid">
-                                    <a class="btn btn-sm btn-link font-size-14 btn-block text-decoration-underline fw-bold text-center"
-                                        href="javascript:void(0)">
-                                        <span>Ver todo <i class="fas fa-arrow-alt-circle-right fa-sm fa-fw"></i></span>
+                            </div>
+                            <!-- Usuario -->
+                            <div x-data="{ open: false }" class="relative">
+                                <button @click="open = !open" class="flex items-center text-gray-500 hover:text-gray-600">
+                                    <img class="h-8 w-8 rounded-full object-cover" src="/images/user.jpeg" alt="User avatar">
+                                    <span class="ml-2 text-sm font-medium">{{ Auth::user()->name }}</span>
+                                </button>
+                                <div x-show="open" @click.away="open = false" x-cloak class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mi cuenta</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Configuración</a>
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Cerrar sesión
                                     </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                        @csrf
+                                    </form>
                                 </div>
-                            </div>
-                        </div>
-
-                        {{-- icono acciones de usuario --}}
-                        <div class="dropdown d-inline-block">
-                            <button type="button" class="btn header-item user text-start d-flex align-items-center"
-                                id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="/images/user.jpeg"
-                                    alt="User">
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end pt-0">
-                                <a class="dropdown-item" href="contacts-profile.html"><i
-                                        class='bx bx-user-circle text-muted font-size-18 align-middle me-1'></i> <span
-                                        class="align-middle">Mi cuenta</span></a>
-                                <a class="dropdown-item" href="apps-chat.html"><i
-                                        class='bx bx-chat text-muted font-size-18 align-middle me-1'></i> <span
-                                        class="align-middle">Chat</span></a>
-                                <a class="dropdown-item" href="pages-faqs.html"><i
-                                        class='bx bx-buoy text-muted font-size-18 align-middle me-1'></i> <span
-                                        class="align-middle">Soporte</span></a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="auth-lock-screen.html"><i
-                                        class='bx bx-lock text-muted font-size-18 align-middle me-1'></i> <span
-                                        class="align-middle">Bloquear pantalla</span></a>
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();"><i
-                                        class="fas fa-sign-out-alt"></i>
-                                    {{ __('Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="d-none">
-                                    @csrf
-                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
 
-
-
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="main-content">
-                <div class="page-content">
-                    <main class="py-4">
-                        @yield('content')
-                    </main>
-
+            <!-- Page content -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+                <div class="container mx-auto px-6 py-8">
+                    @yield('content')
                 </div>
-                <!-- End Page-content -->
-
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <?php echo date('Y'); ?> &copy; Symox plantilla.
-
-
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="text-sm-end d-none d-sm-block">
-                                    Desarrollado con <i class="fas fa-heart    "></i> por <a href="#"
-                                        target="_blank" class="text-reset">David
-                                        Villa</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-            <!-- end main content-->
-
+            </main>
         </div>
-
-
-
-
-
     </div>
-    <script defer src="https://use.fontawesome.com/releases/v5.1.1/js/all.js"
-        integrity="sha384-BtvRZcyfv4r0x/phJt9Y9HhnN5ur1Z+kZbKVgzVBAlQZX4jvAuImlIz+bG7TS00a" crossorigin="anonymous">
-    </script>
 
-
-
-
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </body>
-
 </html>
